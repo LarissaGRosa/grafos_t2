@@ -227,7 +227,7 @@ public class CFC {
 
         String separator = System.getProperty("file.separator");
         // Lendo arquivo de teste
-        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido1.txt");
+        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido2.txt");
 
         CFC algoritmo = new CFC();
         List<Integer> listaCFC = algoritmo.CFC(grafoDirigido);
