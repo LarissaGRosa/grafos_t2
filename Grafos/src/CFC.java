@@ -8,14 +8,13 @@ public class CFC {
 
     List<Integer> CFC(GrafoDirigido grafo) {
         ReturnOfDFS R = DFS(grafo);
-        System.out.println(R.getA());
 
         GrafoDirigido G_T = new GrafoDirigido();
         G_T.V = grafo.V;
         G_T.R = grafo.R;
         G_T.E = grafo.E;
 
-        for (int i = 0; i < G_T.qtdVertices(); i++) {
+        for (int i = 0; i <= G_T.qtdVertices(); i++) {
             List<Float> listaVertice = new ArrayList<>();
 
             float value1 = grafo.E.get(i).get(0);
@@ -139,7 +138,15 @@ public class CFC {
 
         }
 
-        System.out.println(CFCs);
+        for (int i = 0; i < CFCs.size(); i++) {
+            for (int j = 0; j < CFCs.get(i).size(); j++) {
+                System.out.print(CFCs.get(i).get(j));
+                if (j < CFCs.get(i).size()-1) {
+                    System.out.print(",");
+                }
+            }
+            System.out.println();
+        }
     }
 
     int getReference(List<Integer> listaCFC, int reference) {
@@ -152,13 +159,11 @@ public class CFC {
 
         String separator = System.getProperty("file.separator");
         // Lendo arquivo de teste
-        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido2.txt");
+        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido1.txt");
 
 
         CFC algoritmo = new CFC();
         List<Integer> listaCFC = algoritmo.CFC(grafoDirigido);
-        System.out.println(listaCFC);
-
         algoritmo.mostrarResposta(listaCFC);
     }
 
