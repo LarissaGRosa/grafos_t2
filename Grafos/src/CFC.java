@@ -14,7 +14,7 @@ public class CFC {
         G_T.R = grafo.R;
         G_T.E = grafo.E;
 
-        for (int i = 0; i <= G_T.qtdVertices(); i++) {
+        for (int i = 0; i < G_T.qtdArestas(); i++) {
             List<Float> listaVertice = new ArrayList<>();
 
             float value1 = grafo.E.get(i).get(0);
@@ -69,14 +69,18 @@ public class CFC {
 
         for (int i = 0; i < quantidadeVertices; i++) {
             C.add(false);
-            T.add(2147483647);
-            F.add(2147483647);
-            A.add(2147483647);
+            T.add(Integer.MAX_VALUE);
+            F.add(Integer.MAX_VALUE);
+            A.add(Integer.MAX_VALUE);
         }
 
         for (int u = quantidadeVertices-1; u >= 0 ; u--) {
             if (!C.get(u)) {
-                DFSVisit(grafo, u, C, T, F, A, tempo);
+                DFSVisitAdaptado(grafo, u, C, T, F, A, tempo);
+            }
+
+            if (!A.contains(2147483647)) {
+                break;
             }
         }
 
@@ -107,6 +111,37 @@ public class CFC {
 
     }
 
+    void DFSVisitAdaptado(GrafoDirigido grafo, int v, List<Boolean> C, List<Integer> T, List<Integer> F, List<Integer> A, int tempo) {
+        C.set(v, true);
+        tempo = tempo + 1;
+        T.set(v, tempo);
+
+        float vFloat = v+1;
+
+        //System.out.println(vFloat);
+        //System.out.println(grafo.vizinhos(vFloat));
+        List<Float> vizinhos = grafo.vizinhos(vFloat);
+        for (Float u: vizinhos) {
+            int uInt = Math.round(u) - 1;
+            //System.out.println(uInt);
+            if (!C.get(uInt)) {
+                A.set(uInt, v);
+                DFSVisitAdaptado(grafo, uInt, C, T, F, A, tempo);
+            } else if (A.get(uInt) >= 2147483647) {
+                A.set(uInt, v);
+                DFSVisitAdaptado(grafo, uInt, C, T, F, A, tempo);
+            }
+
+            if (!A.contains(2147483647)) {
+                break;
+            }
+        }
+
+        tempo = tempo + 1;
+        F.set(v, tempo);
+
+    }
+
     void mostrarResposta(List<Integer> listaCFC) {
         List<Boolean> visitado = new ArrayList<>();
         for (int i = 0; i < listaCFC.size(); i++) {
@@ -127,7 +162,7 @@ public class CFC {
                     visitado.set(reference, true);
                     reference = getReference(listaCFC, reference);
 
-                    if (reference == 2147483647) {
+                    if (reference == 2147483647 || CFC.contains(reference)) {
                         foundBegin = true;
                     }
                 }
@@ -159,11 +194,11 @@ public class CFC {
 
         String separator = System.getProperty("file.separator");
         // Lendo arquivo de teste
-        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido1.txt");
-
+        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido2.txt");
 
         CFC algoritmo = new CFC();
         List<Integer> listaCFC = algoritmo.CFC(grafoDirigido);
+
         algoritmo.mostrarResposta(listaCFC);
     }
 
