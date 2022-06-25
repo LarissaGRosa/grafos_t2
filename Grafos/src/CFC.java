@@ -90,7 +90,7 @@ public class CFC {
         T.set(v, tempo);
 
         float vFloat = v;
-
+        
         for (Float u: grafo.vizinhos(vFloat)) {
             int uInt = Math.round(u) - 1;
             if (!C.get(uInt)) {

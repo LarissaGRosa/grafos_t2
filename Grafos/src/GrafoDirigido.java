@@ -63,8 +63,6 @@ public class GrafoDirigido {
 
             if (E.get(i).get(0).equals(v)) {
                 vizinho = E.get(i).get(1);
-            } else if (E.get(i).get(1).equals(v)) {
-                vizinho = E.get(i).get(0);
             }
 
             if (vizinho != 0) {
