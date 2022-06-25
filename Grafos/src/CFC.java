@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CFC {
 
-    void CFC(GrafoDirigido grafo) {
+    List<Integer> CFC(GrafoDirigido grafo) {
         ReturnOfDFS R = DFS(grafo);
         System.out.println(R.getA());
 
@@ -30,33 +30,8 @@ public class CFC {
         }
 
         ReturnOfDFS newReturn = DFSAdaptado(G_T);
-        System.out.println(newReturn.getA());
+        return newReturn.getA();
 
-    }
-
-    ReturnOfDFS DFSAdaptado(GrafoDirigido grafo) {
-        List<Boolean> C = new ArrayList<>();
-        List<Integer> T = new ArrayList<>();
-        List<Integer> F = new ArrayList<>();
-        List<Integer> A = new ArrayList<>();
-
-        int tempo = 0;
-        int quantidadeVertices = grafo.qtdVertices();
-
-        for (int i = 0; i < quantidadeVertices; i++) {
-            C.add(false);
-            T.add(2147483647);
-            F.add(2147483647);
-            A.add(null);
-        }
-
-        for (int u = quantidadeVertices-1; u >= 0 ; u--) {
-            if (!C.get(u)) {
-                DFSVisit(grafo, u, C, T, F, A, tempo);
-            }
-        }
-
-        return new ReturnOfDFS(C, T, F, A).getTypes();
     }
 
     ReturnOfDFS DFS(GrafoDirigido grafo) {
@@ -76,6 +51,31 @@ public class CFC {
         }
 
         for (int u = 0; u < quantidadeVertices; u++) {
+            if (!C.get(u)) {
+                DFSVisit(grafo, u, C, T, F, A, tempo);
+            }
+        }
+
+        return new ReturnOfDFS(C, T, F, A).getTypes();
+    }
+
+    ReturnOfDFS DFSAdaptado(GrafoDirigido grafo) {
+        List<Boolean> C = new ArrayList<>();
+        List<Integer> T = new ArrayList<>();
+        List<Integer> F = new ArrayList<>();
+        List<Integer> A = new ArrayList<>();
+
+        int tempo = 0;
+        int quantidadeVertices = grafo.qtdVertices();
+
+        for (int i = 0; i < quantidadeVertices; i++) {
+            C.add(false);
+            T.add(2147483647);
+            F.add(2147483647);
+            A.add(2147483647);
+        }
+
+        for (int u = quantidadeVertices-1; u >= 0 ; u--) {
             if (!C.get(u)) {
                 DFSVisit(grafo, u, C, T, F, A, tempo);
             }
@@ -108,6 +108,45 @@ public class CFC {
 
     }
 
+    void mostrarResposta(List<Integer> listaCFC) {
+        List<Boolean> visitado = new ArrayList<>();
+        for (int i = 0; i < listaCFC.size(); i++) {
+            visitado.add(false);
+        }
+
+        List<List<Integer>> CFCs = new ArrayList<>();
+
+
+        for (int i = 0; i < listaCFC.size(); i++) {
+            if (visitado.get(i) == false) {
+                boolean foundBegin = false;
+                List<Integer> CFC = new ArrayList<>();
+                int reference = i;
+
+                while (!foundBegin){
+                    CFC.add(reference);
+                    visitado.set(reference, true);
+                    reference = getReference(listaCFC, reference);
+
+                    if (reference == 2147483647) {
+                        foundBegin = true;
+                    }
+                }
+                if (!CFC.isEmpty()) {
+                    CFCs.add(CFC);
+                }
+            }
+
+        }
+
+        System.out.println(CFCs);
+    }
+
+    int getReference(List<Integer> listaCFC, int reference) {
+        return listaCFC.get(reference);
+    }
+
+
     public static void main(String[] args) throws FileNotFoundException, URISyntaxException {
         GrafoDirigido grafoDirigido = new GrafoDirigido();
 
@@ -117,7 +156,10 @@ public class CFC {
 
 
         CFC algoritmo = new CFC();
-        algoritmo.CFC(grafoDirigido);
+        List<Integer> listaCFC = algoritmo.CFC(grafoDirigido);
+        System.out.println(listaCFC);
+
+        algoritmo.mostrarResposta(listaCFC);
     }
 
 }
