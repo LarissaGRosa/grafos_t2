@@ -52,7 +52,7 @@ public class CFC {
 
         for (int u = quantidadeVertices-1; u >= 0 ; u--) {
             if (!C.get(u)) {
-                DFSVisit(grafo, u, C, T, A, F, tempo);
+                DFSVisit(grafo, u, C, T, F, A, tempo);
             }
         }
 
@@ -77,7 +77,7 @@ public class CFC {
 
         for (int u = 0; u < quantidadeVertices; u++) {
             if (!C.get(u)) {
-                DFSVisit(grafo, u, C, T, A, F, tempo);
+                DFSVisit(grafo, u, C, T, F, A, tempo);
             }
         }
 
@@ -89,13 +89,17 @@ public class CFC {
         tempo = tempo + 1;
         T.set(v, tempo);
 
-        float vFloat = v;
-        
-        for (Float u: grafo.vizinhos(vFloat)) {
+        float vFloat = v+1;
+
+        //System.out.println(vFloat);
+        //System.out.println(grafo.vizinhos(vFloat));
+        List<Float> vizinhos = grafo.vizinhos(vFloat);
+        for (Float u: vizinhos) {
             int uInt = Math.round(u) - 1;
+            //System.out.println(uInt);
             if (!C.get(uInt)) {
                 A.set(uInt, v);
-                DFSVisit(grafo, uInt, C, T, A, F, tempo);
+                DFSVisit(grafo, uInt, C, T, F, A, tempo);
             }
         }
 
@@ -109,7 +113,7 @@ public class CFC {
 
         String separator = System.getProperty("file.separator");
         // Lendo arquivo de teste
-        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido1.txt");
+        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido2.txt");
 
 
         CFC algoritmo = new CFC();
