@@ -8,7 +8,54 @@ public class CFC {
 
     void CFC(GrafoDirigido grafo) {
         ReturnOfDFS R = DFS(grafo);
-        
+
+        GrafoDirigido G_T = new GrafoDirigido();
+        G_T.V = grafo.V;
+        G_T.R = grafo.R;
+        G_T.E = grafo.E;
+
+        for (int i = 0; i < G_T.qtdVertices(); i++) {
+            List<Float> listaVertice = new ArrayList<>();
+
+            float value1 = grafo.E.get(i).get(0);
+            float value2 = grafo.E.get(i).get(1);
+            float value3 = grafo.E.get(i).get(2);
+
+            listaVertice.add(value2);
+            listaVertice.add(value1);
+            listaVertice.add(value3);
+
+            G_T.E.set(i, listaVertice);
+        }
+
+        ReturnOfDFS newReturn = DFSAdaptado(G_T);
+
+        System.out.println(newReturn.getA());
+    }
+
+    ReturnOfDFS DFSAdaptado(GrafoDirigido grafo) {
+        List<Boolean> C = new ArrayList<>();
+        List<Integer> T = new ArrayList<>();
+        List<Integer> F = new ArrayList<>();
+        List<Integer> A = new ArrayList<>();
+
+        int tempo = 0;
+        int quantidadeVertices = grafo.qtdVertices();
+
+        for (int i = 0; i < quantidadeVertices; i++) {
+            C.add(false);
+            T.add(2147483647);
+            F.add(2147483647);
+            A.add(null);
+        }
+
+        for (int u = quantidadeVertices-1; u <= 0 ; u--) {
+            if (!C.get(u)) {
+                DFSVisit(grafo, u, C, T, A, F, tempo);
+            }
+        }
+
+        return new ReturnOfDFS(C, T, A, F).getTypes();
     }
 
     ReturnOfDFS DFS(GrafoDirigido grafo) {
@@ -18,7 +65,7 @@ public class CFC {
         List<Integer> A = new ArrayList<>();
 
         int tempo = 0;
-        int quantidadeVertices = grafo.V.size();
+        int quantidadeVertices = grafo.qtdVertices();
 
         for (int i = 0; i < quantidadeVertices; i++) {
             C.add(false);
@@ -28,7 +75,7 @@ public class CFC {
         }
 
         for (int u = 0; u < quantidadeVertices; u++) {
-            if (C.get(u) == false) {
+            if (!C.get(u)) {
                 DFSVisit(grafo, u, C, T, A, F, tempo);
             }
         }
@@ -64,6 +111,7 @@ public class CFC {
 
 
         CFC algoritmo = new CFC();
+        algoritmo.CFC(grafoDirigido);
     }
 
 }
