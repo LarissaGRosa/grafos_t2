@@ -8,6 +8,7 @@ public class CFC {
 
     void CFC(GrafoDirigido grafo) {
         ReturnOfDFS R = DFS(grafo);
+        System.out.println(R.getA());
 
         GrafoDirigido G_T = new GrafoDirigido();
         G_T.V = grafo.V;
@@ -29,8 +30,8 @@ public class CFC {
         }
 
         ReturnOfDFS newReturn = DFSAdaptado(G_T);
-
         System.out.println(newReturn.getA());
+
     }
 
     ReturnOfDFS DFSAdaptado(GrafoDirigido grafo) {
@@ -49,13 +50,13 @@ public class CFC {
             A.add(null);
         }
 
-        for (int u = quantidadeVertices-1; u <= 0 ; u--) {
+        for (int u = quantidadeVertices-1; u >= 0 ; u--) {
             if (!C.get(u)) {
                 DFSVisit(grafo, u, C, T, A, F, tempo);
             }
         }
 
-        return new ReturnOfDFS(C, T, A, F).getTypes();
+        return new ReturnOfDFS(C, T, F, A).getTypes();
     }
 
     ReturnOfDFS DFS(GrafoDirigido grafo) {
@@ -69,8 +70,8 @@ public class CFC {
 
         for (int i = 0; i < quantidadeVertices; i++) {
             C.add(false);
-            T.add(2147483647);
-            F.add(2147483647);
+            T.add(Integer.MAX_VALUE);
+            F.add(Integer.MAX_VALUE);
             A.add(null);
         }
 
@@ -80,7 +81,7 @@ public class CFC {
             }
         }
 
-        return new ReturnOfDFS(C, T, A, F).getTypes();
+        return new ReturnOfDFS(C, T, F, A).getTypes();
     }
 
     void DFSVisit(GrafoDirigido grafo, int v, List<Boolean> C, List<Integer> T, List<Integer> F, List<Integer> A, int tempo) {
@@ -89,8 +90,9 @@ public class CFC {
         T.set(v, tempo);
 
         float vFloat = v;
+
         for (Float u: grafo.vizinhos(vFloat)) {
-            int uInt = Math.round(u);
+            int uInt = Math.round(u) - 1;
             if (!C.get(uInt)) {
                 A.set(uInt, v);
                 DFSVisit(grafo, uInt, C, T, A, F, tempo);
