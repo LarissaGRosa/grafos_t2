@@ -94,7 +94,7 @@ public class GrafoDirigido {
     }
 
     void lerArquivo(String path) throws FileNotFoundException, URISyntaxException {
-        URL url = Grafo.class.getResource(path);
+        URL url = GrafoDirigido.class.getResource(path);
         Scanner in = new Scanner(new File(url.toURI()));
         boolean lendoVertices = false;
 
