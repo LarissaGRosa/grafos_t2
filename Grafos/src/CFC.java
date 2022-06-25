@@ -142,7 +142,7 @@ public class CFC {
 
     }
 
-    void mostrarResposta(List<Integer> listaCFC) {
+    void mostrarResposta(List<Integer> listaCFC, GrafoDirigido grafo) {
         List<Boolean> visitado = new ArrayList<>();
         for (int i = 0; i < listaCFC.size(); i++) {
             visitado.add(false);
@@ -152,8 +152,9 @@ public class CFC {
 
 
         for (int i = 0; i < listaCFC.size(); i++) {
-            if (visitado.get(i) == false) {
+            if (!visitado.get(i)) {
                 boolean foundBegin = false;
+                boolean isAnswer = true;
                 List<Integer> CFC = new ArrayList<>();
                 int reference = i;
 
@@ -162,20 +163,52 @@ public class CFC {
                     visitado.set(reference, true);
                     reference = getReference(listaCFC, reference);
 
-                    if (reference == 2147483647 || CFC.contains(reference)) {
+                    if (reference == 2147483647) {
+                        isAnswer = false;
+                        foundBegin = true;
+                    }
+
+                    if (CFC.contains(reference)) {
                         foundBegin = true;
                     }
                 }
-                if (!CFC.isEmpty()) {
+                if (!CFC.isEmpty() && isAnswer) {
                     CFCs.add(CFC);
                 }
             }
+        }
 
+        List<List<Integer>> newCFCs = new ArrayList<>();
+        for (int i = 0; i < listaCFC.size(); i++) {
+            if (CFCs.isEmpty()) {
+                List<Integer> newCFC = new ArrayList<>();
+                newCFC.add(i);
+                newCFCs.add(newCFC);
+            } else {
+                boolean inResult = false;
+                for (int j = 0; j < CFCs.size(); j++) {
+                    for (int k = 0; k < CFCs.size(); k++) {
+                        if (CFCs.get(j).get(k) == i) {
+                            inResult = true;
+                        }
+                    }
+                }
+
+                if (!inResult) {
+                    List<Integer> newCFC = new ArrayList<>();
+                    newCFC.add(i);
+                    newCFCs.add(newCFC);
+                }
+            }
+        }
+
+        if (CFCs.isEmpty()) {
+            CFCs = newCFCs;
         }
 
         for (int i = 0; i < CFCs.size(); i++) {
             for (int j = 0; j < CFCs.get(i).size(); j++) {
-                System.out.print(CFCs.get(i).get(j));
+                System.out.print(grafo.rotulo(CFCs.get(i).get(j)+1));
                 if (j < CFCs.get(i).size()-1) {
                     System.out.print(",");
                 }
@@ -194,12 +227,12 @@ public class CFC {
 
         String separator = System.getProperty("file.separator");
         // Lendo arquivo de teste
-        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido2.txt");
+        grafoDirigido.lerArquivo(separator+"testes"+separator+"dirigido1.txt");
 
         CFC algoritmo = new CFC();
         List<Integer> listaCFC = algoritmo.CFC(grafoDirigido);
 
-        algoritmo.mostrarResposta(listaCFC);
+        algoritmo.mostrarResposta(listaCFC, grafoDirigido);
     }
 
 }
