@@ -105,28 +105,6 @@ public class CFC {
 
     }
 
-    void DFSVisitAdaptado(GrafoDirigido grafo, int v, List<Boolean> C, List<Integer> T, List<Integer> F, List<Integer> A, int tempo) {
-        C.set(v, true);
-        tempo = tempo + 1;
-        T.set(v, tempo);
-
-        float vFloat = v+1;
-        List<Float> vizinhos = grafo.vizinhos(vFloat);
-
-        for (Float u: vizinhos) {
-            int uInt = Math.round(u) - 1;
-
-            if (!C.get(uInt)) {
-                A.set(uInt, v);
-                DFSVisit(grafo, uInt, C, T, F, A, tempo);
-            }
-        }
-
-        tempo = tempo + 1;
-        F.set(v, tempo);
-
-    }
-
     void mostrarResposta(List<Integer> listaCFC, GrafoDirigido grafo) {
         List<Boolean> visitado = new ArrayList<>();
         for (int i = 0; i < listaCFC.size(); i++) {
