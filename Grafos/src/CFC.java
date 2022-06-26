@@ -1,13 +1,14 @@
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Collections;
 
 public class CFC {
 
     List<Integer> CFC(GrafoDirigido grafo) {
         ReturnOfDFS R = DFS(grafo);
+        System.out.println(R.getA());
 
         GrafoDirigido G_T = new GrafoDirigido();
         G_T.V = grafo.V;
@@ -29,6 +30,7 @@ public class CFC {
         }
 
         ReturnOfDFS newReturn = DFSAdaptado(G_T);
+        System.out.println(newReturn.getA());
         return newReturn.getA();
 
     }
@@ -71,16 +73,12 @@ public class CFC {
             C.add(false);
             T.add(Integer.MAX_VALUE);
             F.add(Integer.MAX_VALUE);
-            A.add(Integer.MAX_VALUE);
+            A.add(null);
         }
 
         for (int u = quantidadeVertices-1; u >= 0 ; u--) {
             if (!C.get(u)) {
-                DFSVisitAdaptado(grafo, u, C, T, F, A, tempo);
-            }
-
-            if (!A.contains(Integer.MAX_VALUE)) {
-                break;
+                DFSVisit(grafo, u, C, T, F, A, tempo);
             }
         }
 
@@ -120,13 +118,9 @@ public class CFC {
         for (Float u: vizinhos) {
             int uInt = Math.round(u) - 1;
 
-            if (!C.get(uInt) || A.get(uInt) >= Integer.MAX_VALUE) {
+            if (!C.get(uInt)) {
                 A.set(uInt, v);
-                DFSVisitAdaptado(grafo, uInt, C, T, F, A, tempo);
-            }
-
-            if (!A.contains(Integer.MAX_VALUE)) {
-                break;
+                DFSVisit(grafo, uInt, C, T, F, A, tempo);
             }
         }
 
@@ -148,21 +142,25 @@ public class CFC {
                 boolean foundBegin = false;
                 boolean isAnswer = true;
                 List<Integer> CFC = new ArrayList<>();
-                int reference = i;
+                Integer reference = i;
 
-                while (!foundBegin){
+                List<Integer> copy = new ArrayList<>(listaCFC);
+
+                while (!foundBegin && reference != null){
                     CFC.add(reference);
                     visitado.set(reference, true);
                     reference = getReference(listaCFC, reference);
 
-                    if (reference == Integer.MAX_VALUE) {
-                        isAnswer = false;
+                    copy.remove(reference);
+
+                    if (reference == null) {
                         foundBegin = true;
                     }
 
-                    if (CFC.contains(reference)) {
-                        foundBegin = true;
+                    if (CFC.stream().anyMatch(element -> copy.contains(element))) {
+                        isAnswer = false;
                     }
+
                 }
                 if (isAnswer) {
                     CFCs.add(CFC);
@@ -179,7 +177,7 @@ public class CFC {
             } else {
                 boolean inResult = false;
                 for (int j = 0; j < CFCs.size(); j++) {
-                    for (int k = 0; k < CFCs.size(); k++) {
+                    for (int k = 0; k < CFCs.get(j).size(); k++) {
                         if (CFCs.get(j).get(k) == i) {
                             inResult = true;
                         }
@@ -194,12 +192,11 @@ public class CFC {
             }
         }
 
-        if (CFCs.isEmpty()) {
-            CFCs = newCFCs;
-        }
+        CFCs.addAll(newCFCs);
 
         for (int i = 0; i < CFCs.size(); i++) {
             for (int j = 0; j < CFCs.get(i).size(); j++) {
+                Collections.sort(CFCs.get(i));
                 System.out.print(grafo.rotulo(CFCs.get(i).get(j)+1));
                 if (j < CFCs.get(i).size()-1) {
                     System.out.print(",");
@@ -209,8 +206,11 @@ public class CFC {
         }
     }
 
-    int getReference(List<Integer> listaCFC, int reference) {
-        return listaCFC.get(reference);
+    Integer getReference(List<Integer> listaCFC, Integer reference) {
+        if (reference != null) {
+            return listaCFC.get(reference);
+        }
+        return null;
     }
 
 
