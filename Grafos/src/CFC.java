@@ -79,7 +79,7 @@ public class CFC {
                 DFSVisitAdaptado(grafo, u, C, T, F, A, tempo);
             }
 
-            if (!A.contains(2147483647)) {
+            if (!A.contains(Integer.MAX_VALUE)) {
                 break;
             }
         }
@@ -93,13 +93,11 @@ public class CFC {
         T.set(v, tempo);
 
         float vFloat = v+1;
-
-        //System.out.println(vFloat);
-        //System.out.println(grafo.vizinhos(vFloat));
         List<Float> vizinhos = grafo.vizinhos(vFloat);
+
         for (Float u: vizinhos) {
             int uInt = Math.round(u) - 1;
-            //System.out.println(uInt);
+
             if (!C.get(uInt)) {
                 A.set(uInt, v);
                 DFSVisit(grafo, uInt, C, T, F, A, tempo);
@@ -117,22 +115,17 @@ public class CFC {
         T.set(v, tempo);
 
         float vFloat = v+1;
-
-        //System.out.println(vFloat);
-        //System.out.println(grafo.vizinhos(vFloat));
         List<Float> vizinhos = grafo.vizinhos(vFloat);
+
         for (Float u: vizinhos) {
             int uInt = Math.round(u) - 1;
-            //System.out.println(uInt);
-            if (!C.get(uInt)) {
-                A.set(uInt, v);
-                DFSVisitAdaptado(grafo, uInt, C, T, F, A, tempo);
-            } else if (A.get(uInt) >= 2147483647) {
+
+            if (!C.get(uInt) || A.get(uInt) >= Integer.MAX_VALUE) {
                 A.set(uInt, v);
                 DFSVisitAdaptado(grafo, uInt, C, T, F, A, tempo);
             }
 
-            if (!A.contains(2147483647)) {
+            if (!A.contains(Integer.MAX_VALUE)) {
                 break;
             }
         }
@@ -150,7 +143,6 @@ public class CFC {
 
         List<List<Integer>> CFCs = new ArrayList<>();
 
-
         for (int i = 0; i < listaCFC.size(); i++) {
             if (!visitado.get(i)) {
                 boolean foundBegin = false;
@@ -163,7 +155,7 @@ public class CFC {
                     visitado.set(reference, true);
                     reference = getReference(listaCFC, reference);
 
-                    if (reference == 2147483647) {
+                    if (reference == Integer.MAX_VALUE) {
                         isAnswer = false;
                         foundBegin = true;
                     }
@@ -172,7 +164,7 @@ public class CFC {
                         foundBegin = true;
                     }
                 }
-                if (!CFC.isEmpty() && isAnswer) {
+                if (isAnswer) {
                     CFCs.add(CFC);
                 }
             }
