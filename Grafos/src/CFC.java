@@ -8,7 +8,6 @@ public class CFC {
 
     List<Integer> CFC(GrafoDirigido grafo) {
         ReturnOfDFS R = DFS(grafo);
-        System.out.println(R.getA());
 
         GrafoDirigido G_T = new GrafoDirigido();
         G_T.V = grafo.V;
@@ -30,7 +29,6 @@ public class CFC {
         }
 
         ReturnOfDFS newReturn = DFSAdaptado(G_T);
-        System.out.println(newReturn.getA());
         return newReturn.getA();
 
     }
