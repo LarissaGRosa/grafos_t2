@@ -110,8 +110,20 @@ public class EdmondsKarp {
         // Lendo arquivo de teste
         grafoDirigido.lerArquivo(separator+"testes"+separator+"fluxo_maximo.txt");
 
+        int source = 0;
+        int sink = 0;
+
+        for(int i = 0; i < grafoDirigido.R.size(); i++) {
+            String identification = grafoDirigido.R.get(i);
+            if (identification.equals("s")) {
+                source = grafoDirigido.V.get(i);
+            } else if (identification.equals("t")) {
+                sink = grafoDirigido.V.get(i);
+            }
+        }
+
         EdmondsKarp algoritmo = new EdmondsKarp();
-        int resultado = algoritmo.EdmondsKarp(grafoDirigido, 1, 6);
+        int resultado = algoritmo.EdmondsKarp(grafoDirigido, source, sink);
 
         System.out.println("Fluxo maximo: " + resultado);
     }
